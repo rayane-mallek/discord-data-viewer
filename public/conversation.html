@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversation</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1 id="conversationTitle" class="mt-5">Conversation</h1>
+    <ul id="messageList" class="list-group mt-3">
+      <!-- messages inserted dynamically with JS -->
+    </ul>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const pathArray = window.location.pathname.split('/');
+      const conversationName = pathArray[pathArray.length - 1];
+      document.getElementById('conversationTitle').textContent = conversationName;
+
+      fetch(`/api/conversation/${conversationName}`)
+        .then(response => response.json())
+        .then(messages => {
+          const list = document.getElementById('messageList');
+          messages.forEach(message => {
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item';
+            listItem.innerHTML = `
+              <p><strong>ID:</strong> ${message.ID}</p>
+              <p><strong>Date:</strong> ${message.Timestamp}</p>
+              <p><strong>Message:</strong> ${message.Contents}</p>
+              ${renderAttachment(message.Attachments)}
+            `;
+            list.appendChild(listItem);
+          });
+        });
+
+      function renderAttachment(attachmentUrl) {
+        if (!attachmentUrl) return '';
+        const url = new URL(attachmentUrl);
+        const extension = url.pathname.split('.').pop().toLowerCase();
+
+        if (['png', 'jpg', 'jpeg', 'gif'].includes(extension)) {
+          return `<img src="${attachmentUrl}" class="img-fluid" alt="Attachment">`;
+        } else if (['mp4', 'webm', 'ogg'].includes(extension)) {
+          return `<video controls class="img-fluid"><source src="${attachmentUrl}" type="video/${extension}">Your browser does not support the video tag.</video>`;
+        } else if (['mp3', 'wav', 'ogg'].includes(extension)) {
+          return `<audio controls class="img-fluid"><source src="${attachmentUrl}" type="audio/${extension}">Your browser does not support the audio element.</audio>`;
+        } else {
+          return `<a href="${attachmentUrl}" target="_blank">Download Attachment</a>`;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

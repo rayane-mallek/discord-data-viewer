@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversations</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="mt-5">Conversations</h1>
+    <ul id="conversationList" class="list-group mt-3">
+      <!-- conversations inserted dynamically with JS -->
+    </ul>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('/api/conversations')
+        .then(response => response.json())
+        .then(conversations => {
+          const list = document.getElementById('conversationList');
+          conversations.forEach(conversation => {
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item';
+            listItem.innerHTML = `<a href="/conversation/${conversation}">${conversation}</a>`;
+            list.appendChild(listItem);
+          });
+        });
+    });
+  </script>
+</body>
+</html>

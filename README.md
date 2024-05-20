@@ -23,7 +23,7 @@ A simple Node.js web application to visualize and explore your personal Discord 
 
 ## Usage
 
-1. Place your Discord data in a message folder. Each conversation should be in its own folder named after the conversation, with a messages.json file containing the message data.
+1. Place your Discord messages data in the `messages` folder. Each conversation should be in its own folder named after the conversation, with a messages.json file containing the message data.
    ```sh
    discord-data-viewer/
     ├── messages/

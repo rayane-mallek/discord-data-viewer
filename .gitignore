@@ -1,2 +1,4 @@
-messages/
+messages/*
 node_modules/
+
+!messages/.gitkeep
